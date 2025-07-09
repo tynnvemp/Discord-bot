@@ -156,8 +156,6 @@ def home():
 def run():
     app.run(host='0.0.0.0', port=8080)
 
-threading.Thread(target=run).start()
-
-# Chạy bot với token từ biến môi trường
 bot.run(os.getenv("DISCORD_TOKEN"))
     
+threading.Thread(target=run).start()
