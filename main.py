@@ -52,6 +52,9 @@ async def on_ready():
     await bot.tree.sync()
     print(f"✅ Bot đã sẵn sàng: {bot.user}")
 
+from chess_game import setup_chess_commands
+setup_chess_commands(bot)
+
 bot.tree.command(name="wallet", description="Xem số coin hiện tại")
 async def wallet(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
