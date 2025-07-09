@@ -40,11 +40,11 @@ def setup_chess_ai_commands(bot):
 
         message_refs[interaction.user.id] = await interaction.original_response()
 
-@bot.tree.command(name="move", description="Đi nước cờ với bot")
-@app_commands.describe(move="Ví dụ: e2e4")
-async def move(interaction: discord.Interaction, move: str):
-    await interaction.response.defer(ephemeral=True)
+    @bot.tree.command(name="move", description="Đi nước cờ với bot")
+    @app_commands.describe(move="Ví dụ: e2e4")
+    async def move(interaction: discord.Interaction, move: str):
         global board, current_game
+        await interaction.response.defer(ephemeral=True)
         user_id = interaction.user.id
 
         if user_id not in current_game:
@@ -76,22 +76,6 @@ async def move(interaction: discord.Interaction, move: str):
         except:
             await interaction.response.send_message("❌ Nước đi không hợp lệ.", ephemeral=True)
 
-    async def replace_embed(interaction, content, final=False):
-        embed, file = render_board()
-        view = None if final else SurrenderView(interaction.user.id)
-
-        old_msg = message_refs.get(interaction.user.id)
-        if old_msg:
-            try:
-                await old_msg.delete()
-            except:
-                pass
-
-        new_msg = await interaction.channel.send(content=content, embed=embed, file=file, view=view)
-        message_refs[interaction.user.id] = new_msg
-        if not final:
-            await interaction.response.send_message("✅ Đã cập nhật ván cờ.", ephemeral=True)
-
     def render_board():
         svg = chess.svg.board(board, size=350)
         png = cairosvg.svg2png(bytestring=svg.encode("utf-8"))
@@ -109,6 +93,22 @@ async def move(interaction: discord.Interaction, move: str):
             return random.choice(captures or legal)
         else:
             return legal[0]  # sau có thể tích hợp Stockfish cho mode HARD
+
+    async def replace_embed(interaction, content, final=False):
+        embed, file = render_board()
+        view = None if final else SurrenderView(interaction.user.id)
+
+        old_msg = message_refs.get(interaction.user.id)
+        if old_msg:
+            try:
+                await old_msg.delete()
+            except:
+                pass
+
+        new_msg = await interaction.channel.send(content=content, embed=embed, file=file, view=view)
+        message_refs[interaction.user.id] = new_msg
+        if not final:
+            await interaction.response.send_message("✅ Đã cập nhật ván cờ.", ephemeral=True)
 
     class SurrenderView(discord.ui.View):
         def __init__(self, player_id):
