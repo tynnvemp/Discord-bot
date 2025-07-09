@@ -43,6 +43,7 @@ def setup_chess_ai_commands(bot):
     @bot.tree.command(name="move", description="Đi nước cờ với bot")
     @app_commands.describe(move="Ví dụ: e2e4")
     async def move(interaction: discord.Interaction, move: str):
+    await interaction.response.defer(ephemeral=True)
         global board, current_game
         user_id = interaction.user.id
 
