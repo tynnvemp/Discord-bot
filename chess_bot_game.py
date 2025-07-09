@@ -48,7 +48,7 @@ def setup_chess_ai_commands(bot):
         user_id = interaction.user.id
 
         if user_id not in current_game:
-            await interaction.response.send_message("❗ Bạn chưa bắt đầu ván cờ nào với bot.", ephemeral=True)
+            await interaction.followup.send("❗ Bạn chưa bắt đầu ván cờ nào với bot.", ephemeral=True)
             return
 
         try:
@@ -74,7 +74,7 @@ def setup_chess_ai_commands(bot):
             await replace_embed(interaction, f"✅ Bạn đi `{move}`, bot phản đòn `{bot_move}`")
 
         except:
-            await interaction.response.send_message("❌ Nước đi không hợp lệ.", ephemeral=True)
+            await interaction.followup.send("❌ Nước đi không hợp lệ.", ephemeral=True)
 
     def render_board():
         svg = chess.svg.board(board, size=350)
@@ -108,7 +108,7 @@ def setup_chess_ai_commands(bot):
         new_msg = await interaction.channel.send(content=content, embed=embed, file=file, view=view)
         message_refs[interaction.user.id] = new_msg
         if not final:
-            await interaction.response.send_message("✅ Đã cập nhật ván cờ.", ephemeral=True)
+            await interaction.followup.send("✅ Đã cập nhật ván cờ.", ephemeral=True)
 
     class SurrenderView(discord.ui.View):
         def __init__(self, player_id):
