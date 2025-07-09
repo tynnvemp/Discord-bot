@@ -52,6 +52,9 @@ async def on_ready():
     await bot.tree.sync()
     print(f"✅ Bot đã sẵn sàng: {bot.user}")
 
+from chess_bot_game import setup_chess_ai_commands
+setup_chess_ai_commands(bot)
+
 from chess_game import setup_chess_commands
 setup_chess_commands(bot)
 
