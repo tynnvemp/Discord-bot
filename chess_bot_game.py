@@ -96,8 +96,7 @@ def setup_chess_ai_commands(bot):
         png = cairosvg.svg2png(bytestring=svg.encode("utf-8"))
         file = discord.File(io.BytesIO(png), filename="board.png")
         embed = discord.Embed(title="🤖 Cờ với AI")
-
-  embed.set_image(url="attachment://board.png")
+        embed.set_image(url="attachment://board.png")
         return embed, file
 
     def select_bot_move(board, difficulty):
@@ -124,4 +123,3 @@ def setup_chess_ai_commands(bot):
             await interaction.channel.send(f"🏳️ {interaction.user.mention} đã đầu hàng trước bot.")
             current_game.pop(interaction.user.id, None)
             message_refs.pop(interaction.user.id, None)
-          
