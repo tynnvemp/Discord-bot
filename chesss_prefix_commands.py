@@ -5,7 +5,7 @@ import io
 import cairosvg
 from discord.ext import commands
 
-# dùng chung với chess_bot_game
+# Dùng chung với chess_bot_game
 board = chess.Board()
 current_game = {}
 message_refs = {}
@@ -88,7 +88,7 @@ def setup_chess_prefix_commands(bot: commands.Bot):
             captures = [m for m in legal if board.is_capture(m)]
             return random.choice(captures or legal)
         else:
-            return legal[0]
+            return legal[0]  # có thể tích hợp Stockfish sau
 
     class SurrenderView(discord.ui.View):
         def __init__(self, player_id):
