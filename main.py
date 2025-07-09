@@ -5,7 +5,10 @@ import random, json, os, threading, asyncio
 from flask import Flask
 from datetime import datetime, timedelta
 
+# 👉 Khởi tạo intents đầy đủ cho slash và prefix
 intents = discord.Intents.default()
+intents.message_content = True
+
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 DATA_FILE = "users.json"
@@ -47,18 +50,20 @@ def update_daily_time(user_id):
     user_data[uid]["last_daily"] = datetime.utcnow().isoformat()
     save_data()
 
+# 👉 Gọi các command chess từ 2 file khác
+from chess_bot_game import setup_chess_ai_commands         # Slash command: /chessbot
+from chess_prefix_commands import setup_chess_prefix_commands  # Prefix command: !chess_start
+
+setup_chess_ai_commands(bot)
+setup_chess_prefix_commands(bot)
+
 @bot.event
 async def on_ready():
     await bot.tree.sync()
     print(f"✅ Bot đã sẵn sàng: {bot.user}")
 
-from chess_bot_game import setup_chess_ai_commands
-setup_chess_ai_commands(bot)
-
-from chess_game import setup_chess_commands
-setup_chess_commands(bot)
-
-bot.tree.command(name="wallet", description="Xem số coin hiện tại")
+# Slash commands khác
+@bot.tree.command(name="wallet", description="Xem số coin hiện tại")
 async def wallet(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
     coins = get_coins(interaction.user.id)
@@ -158,4 +163,9 @@ def run():
 
 threading.Thread(target=run).start()
 
-bot.run(os.getenv("DISCORD_TOKEN"))
+# ✅ Chạy bot
+token = os.getenv("DISCORD_TOKEN")
+if not token:
+    print("❌ Thiếu DISCORD_TOKEN trong biến môi trường.")
+else:
+    bot.run(token)
